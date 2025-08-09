@@ -1,11 +1,8 @@
-# Add all dependencies here
-pandas
-scikit-learn
+
+# Core dependencies for backend and frontend
 flask
-fastapi
-uvicorn
 streamlit
-shap
-lime
-catboost
-lightgbm
+pandas
+numpy
+scikit-learn
+joblib
