@@ -1,0 +1,4 @@
+age,location,occupation,policy_type,coverage,premium_amount,renewal_date,num_claims,total_claim_amount,claim_frequency,on_time_payments,delayed_payments,missed_payments,customer_tenure,support_calls,complaints,feedback_rating,previous_renewal_outcome,previous_premium_amount,last_claim_date
+35,New York,Engineer,Auto,Full,1200,2025-07-01,2,3000,0.5,12,1,0,5,2,0,4,Renewed,1100,2025-06-01
+50,California,Doctor,Home,Basic,800,2025-08-15,0,0,0,24,0,1,10,0,1,5,Not Renewed,800,
+28,Texas,Teacher,Life,Premium,600,2025-09-10,1,500,0.2,6,2,0,2,1,0,3,Renewed,550,2025-07-15

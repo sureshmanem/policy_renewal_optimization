@@ -54,8 +54,8 @@ def engineer_features(df):
 	return df
 
 if __name__ == "__main__":
-	# Example usage
-	df = load_data("sample_schema.csv")
+	# Example usage with sample data
+	df = load_data("sample_data.csv")
 	df = clean_data(df)
 	df = engineer_features(df)
 	print(df.head())
