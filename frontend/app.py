@@ -1,9 +1,12 @@
 
 
 
+
 import streamlit as st
 import requests
 import pandas as pd
+
+
 
 st.set_page_config(page_title="Policy Churn Prediction", layout="wide")
 
@@ -60,7 +63,8 @@ if submitted:
 		"Last_Interaction": str(Last_Interaction),
 	}
 	try:
-		response = requests.post("http://localhost:5000/predict", json=input_data)
+		headers = {"x-api-key": "mysecretapikey"}  # Must match backend
+		response = requests.post("http://localhost:5000/predict", json=input_data, headers=headers)
 		if response.status_code == 200:
 			result = response.json()
 			prob = result['churn_probability']
@@ -70,6 +74,7 @@ if submitted:
 			st.info(get_probability_message(prob))
 			st.markdown("<hr>", unsafe_allow_html=True)
 			st.markdown("**Key Drivers of Prediction:**")
+			st.caption("These are the most influential features for this specific prediction. Higher absolute values indicate a stronger impact on the churn risk. Positive values increase churn risk, negative values decrease it. Use these insights to guide your retention strategy.")
 			for feat, val in result['top_features']:
 				st.write(f"- **{feat}**: {val:.3f}")
 			st.markdown("<hr>", unsafe_allow_html=True)

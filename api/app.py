@@ -29,8 +29,16 @@ def risk_tier(prob):
 	else:
 		return 'Low'
 
+
+API_KEY = "mysecretapikey"  # Change this in production!
+
 @app.route('/predict', methods=['POST'])
 def predict():
+	# Check API key in headers
+	req_key = request.headers.get('x-api-key')
+	if req_key != API_KEY:
+		return jsonify({"error": "Unauthorized. Invalid API key."}), 401
+
 	data = request.json
 	# Convert input to DataFrame
 	input_df = pd.DataFrame([data])
