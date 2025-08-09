@@ -79,6 +79,22 @@ if submitted:
 				st.write(f"- **{feat}**: {val:.3f}")
 			st.markdown("<hr>", unsafe_allow_html=True)
 			st.caption("Model predictions are for guidance. Use your expertise and context for final decisions.")
+
+			# --- Feedback Button ---
+			if st.button("Flag this prediction as uncertain or incorrect"):
+				feedback_data = input_data.copy()
+				feedback_data['churn_probability'] = prob
+				feedback_data['risk_tier'] = tier
+				feedback_data['top_features'] = str(result['top_features'])
+				try:
+					headers = {"x-api-key": "mysecretapikey"}
+					resp = requests.post("http://localhost:5000/feedback", json=feedback_data, headers=headers)
+					if resp.status_code == 200:
+						st.success("Thank you for your feedback! This case will be reviewed.")
+					else:
+						st.error(f"Feedback error: {resp.text}")
+				except Exception as e:
+					st.error(f"Could not send feedback: {e}")
 		else:
 			st.error(f"API Error: {response.text}")
 	except Exception as e:
