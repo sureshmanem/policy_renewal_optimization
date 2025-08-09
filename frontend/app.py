@@ -4,6 +4,7 @@
 
 import streamlit as st
 import requests
+import os
 import pandas as pd
 
 
@@ -65,7 +66,10 @@ if submitted:
 	}
 	try:
 		headers = {"x-api-key": "mysecretapikey"}  # Must match backend
-		response = requests.post("http://localhost:5000/predict", json=input_data, headers=headers)
+		# Use Docker network hostname if running in container, else localhost
+		api_host = os.environ.get("API_HOST", "localhost")
+		api_url = f"http://{api_host}:5000/predict"
+		response = requests.post(api_url, json=input_data, headers=headers)
 		if response.status_code == 200:
 			result = response.json()
 			prob = result['churn_probability']
@@ -92,7 +96,9 @@ if submitted:
 				feedback_data['top_features'] = str(result['top_features'])
 				try:
 					headers = {"x-api-key": "mysecretapikey"}
-					resp = requests.post("http://localhost:5000/feedback", json=feedback_data, headers=headers)
+					api_host = os.environ.get("API_HOST", "localhost")
+					feedback_url = f"http://{api_host}:5000/feedback"
+					resp = requests.post(feedback_url, json=feedback_data, headers=headers)
 					if resp.status_code == 200:
 						st.session_state['feedback_submitted'] = True
 						st.experimental_rerun()

@@ -1,7 +1,10 @@
 # Backend (Flask API)
-FROM python:3.11-slim
+FROM python:3.13.6-slim-bullseye
 
 WORKDIR /app
+
+# Create a non-root user and group
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
 
 COPY api/ ./api/
 COPY data/ ./data/
@@ -10,6 +13,13 @@ COPY requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Create log and feedback files with correct permissions
+RUN touch /app/api_requests.log /app/feedback_log.csv && \
+	chown appuser:appgroup /app/api_requests.log /app/feedback_log.csv
+
 EXPOSE 5000
+
+# Switch to non-root user
+USER appuser
 
 CMD ["python", "api/app.py"]

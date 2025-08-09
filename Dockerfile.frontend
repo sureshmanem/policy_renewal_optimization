@@ -1,15 +1,17 @@
 # Frontend (Streamlit UI)
-FROM python:3.11.8-slim-bullseye
+FROM python:3.13.6-slim-bullseye
 
 WORKDIR /app
 
-COPY frontend/ ./frontend/
+# Copy requirements and install first for better caching
 COPY requirements.txt ./
-
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends gcc && \
 	pip install --no-cache-dir -r requirements.txt && \
 	apt-get purge -y --auto-remove gcc && \
 	rm -rf /var/lib/apt/lists/*
+
+# Copy the latest frontend code after installing dependencies
+COPY frontend/ ./frontend/
 
 EXPOSE 8501
 

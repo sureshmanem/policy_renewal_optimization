@@ -24,4 +24,6 @@ services:
       - ./frontend:/app/frontend
     depends_on:
       - api
+    environment:
+      - API_HOST=api
     command: /bin/sh -c "sleep 10 && streamlit run frontend/app.py --server.port=8501 --server.address=0.0.0.0"
