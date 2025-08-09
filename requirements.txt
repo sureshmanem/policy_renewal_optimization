@@ -1,0 +1,11 @@
+# Add all dependencies here
+pandas
+scikit-learn
+flask
+fastapi
+uvicorn
+streamlit
+shap
+lime
+catboost
+lightgbm
