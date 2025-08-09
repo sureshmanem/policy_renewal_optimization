@@ -49,6 +49,7 @@ def get_probability_message(prob):
 		return "The customer is likely to stay, but continue to provide good service."
 
 if submitted:
+	st.session_state['feedback_submitted'] = False  # Reset feedback state on new prediction
 	input_data = {
 		"CustomerID": CustomerID,
 		"Age": Age,
@@ -81,6 +82,9 @@ if submitted:
 			st.caption("Model predictions are for guidance. Use your expertise and context for final decisions.")
 
 			# --- Feedback Button ---
+			if 'feedback_submitted' not in st.session_state:
+				st.session_state['feedback_submitted'] = False
+
 			if st.button("Flag this prediction as uncertain or incorrect"):
 				feedback_data = input_data.copy()
 				feedback_data['churn_probability'] = prob
@@ -90,11 +94,18 @@ if submitted:
 					headers = {"x-api-key": "mysecretapikey"}
 					resp = requests.post("http://localhost:5000/feedback", json=feedback_data, headers=headers)
 					if resp.status_code == 200:
-						st.success("Thank you for your feedback! This case will be reviewed.")
+						st.session_state['feedback_submitted'] = True
+						st.experimental_rerun()
 					else:
 						st.error(f"Feedback error: {resp.text}")
 				except Exception as e:
 					st.error(f"Could not send feedback: {e}")
+
+			if st.session_state.get('feedback_submitted', False):
+				st.success("Feedback submitted!")
+				if st.button("Clear feedback message"):
+					st.session_state['feedback_submitted'] = False
+					st.experimental_rerun()
 		else:
 			st.error(f"API Error: {response.text}")
 	except Exception as e:
